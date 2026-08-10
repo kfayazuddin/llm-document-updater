@@ -1,0 +1,454 @@
+<title>The Edit Pipeline — How It Works</title>
+
+<style>
+  :root {
+    --paper:        #eceee6;
+    --paper-raised: #f7f8f1;
+    --paper-line:   #cdd0c4;
+    --ink:          #1d2420;
+    --ink-soft:     #5b6259;
+    --pencil:       #2f5d8a;
+    --pencil-soft:  #cdd9e6;
+    --redline:      #a83b32;
+    --redline-soft: #f0dcd8;
+    --approved:     #3f7a5c;
+    --approved-soft:#dbe8de;
+    --mono-chip:    #e4e2d6;
+  }
+
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper:        #181b17;
+      --paper-raised: #20241f;
+      --paper-line:   #3a4038;
+      --ink:          #e9e7dc;
+      --ink-soft:     #a3a99a;
+      --pencil:       #7fb0dd;
+      --pencil-soft:  #26364a;
+      --redline:      #e08277;
+      --redline-soft: #3d2624;
+      --approved:     #7fc79c;
+      --approved-soft:#233229;
+      --mono-chip:    #262a24;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:        #181b17;
+    --paper-raised: #20241f;
+    --paper-line:   #3a4038;
+    --ink:          #e9e7dc;
+    --ink-soft:     #a3a99a;
+    --pencil:       #7fb0dd;
+    --pencil-soft:  #26364a;
+    --redline:      #e08277;
+    --redline-soft: #3d2624;
+    --approved:     #7fc79c;
+    --approved-soft:#233229;
+    --mono-chip:    #262a24;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    margin: 0;
+    padding: 56px 24px 80px;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0 0 16px;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: 16.5px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 6px;
+  }
+
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  hr.rule {
+    border: none;
+    border-top: 1px solid var(--paper-line);
+    margin: 40px 0;
+  }
+
+  h2 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.005em;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  .section-note {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin: 0 0 28px;
+  }
+
+  figure {
+    margin: 0 0 12px;
+    padding: 20px 20px 8px;
+    background: var(--paper-raised);
+    border: 1px solid var(--paper-line);
+    border-radius: 3px;
+  }
+
+  figure svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    color: var(--ink);
+  }
+
+  .diagram-scroll {
+    overflow-x: auto;
+  }
+
+  figcaption {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    padding: 12px 2px 6px;
+    border-top: 1px solid var(--paper-line);
+    margin-top: 14px;
+  }
+
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  .svg-label      { font-size: 14px; font-weight: 600; fill: currentColor; }
+  .svg-sublabel   { font-size: 11.5px; fill: currentColor; opacity: 0.68; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+  .svg-arrow-text { font-size: 11.5px; fill: currentColor; opacity: 0.78; }
+  .svg-mono       { font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+
+  .colophon {
+    margin-top: 48px;
+    padding: 22px 24px;
+    background: var(--paper-raised);
+    border: 1px solid var(--paper-line);
+    border-radius: 3px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px 28px;
+  }
+
+  .colophon-item .k {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--pencil);
+    margin: 0 0 4px;
+  }
+
+  .colophon-item .v {
+    font-variant-numeric: tabular-nums;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .colophon-item .v small {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  .caveat {
+    margin-top: 40px;
+    padding: 18px 22px;
+    border-left: 3px solid var(--redline);
+    background: var(--redline-soft);
+    border-radius: 0 3px 3px 0;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+
+  .caveat b { color: var(--redline); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    figure { transition: border-color 0.15s ease; }
+  }
+</style>
+
+<div class="page">
+
+  <p class="eyebrow">doc-updater · architecture</p>
+  <h1>How the edit pipeline actually works</h1>
+  <p class="lede">
+    The document never gets rewritten wholesale. The model proposes a short list of
+    <strong>paragraph-level edits</strong>; plain code — not the model — decides which
+    ones are trustworthy enough to apply.
+  </p>
+
+  <hr class="rule">
+
+  <h2>1. The pipeline, end to end</h2>
+  <p class="section-note">
+    One LLM call turns the document and the change list into a set of edit
+    instructions. Everything after that — accepting, rejecting, applying,
+    double-checking — is deterministic code with no model involved.
+  </p>
+
+  <figure>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 760 900" role="img"
+           aria-label="Pipeline diagram: the source document and change list are split into addressable paragraphs, sent to the LLM once to propose an edit list, passed through a code validator that splits edits into accepted and rejected, applies only accepted edits with plain string operations, and independently diffs the result against the pre-edit paragraphs to catch orphaned headings before producing the updated document and a status report.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor" />
+          </marker>
+          <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--pencil)" />
+          </marker>
+        </defs>
+
+        <!-- INPUT -->
+        <rect x="180" y="30" width="360" height="70" rx="2" fill="none" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+        <text x="360" y="58" text-anchor="middle" class="svg-label">Source document + changes[]</text>
+        <text x="360" y="78" text-anchor="middle" class="svg-sublabel">~10,000 words · 4 natural-language instructions</text>
+
+        <line x1="360" y1="100" x2="360" y2="150" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="374" y="128" class="svg-arrow-text">split on blank lines</text>
+
+        <!-- SPLIT -->
+        <rect x="210" y="150" width="300" height="56" rx="2" fill="none" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+        <text x="360" y="174" text-anchor="middle" class="svg-label svg-mono">Paragraphs P1 … P223</text>
+        <text x="360" y="192" text-anchor="middle" class="svg-sublabel">each independently addressable</text>
+
+        <line x1="360" y1="206" x2="360" y2="250" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="374" y="232" class="svg-arrow-text">one call: full numbered doc + change list</text>
+
+        <!-- PROPOSE (LLM) -->
+        <rect x="170" y="250" width="380" height="72" rx="2" fill="var(--pencil-soft)" stroke="var(--pencil)" stroke-width="1.4"/>
+        <text x="360" y="280" text-anchor="middle" class="svg-label">LLM proposes an edit list</text>
+        <text x="360" y="300" text-anchor="middle" class="svg-sublabel">{ paragraph_id, action, new_text, change_index }</text>
+
+        <line x1="360" y1="322" x2="360" y2="368" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="374" y="350" class="svg-arrow-text">each proposed edit</text>
+
+        <!-- VALIDATE gate -->
+        <path d="M 280 368 L 440 368 L 460 397 L 440 426 L 280 426 L 260 397 Z"
+              fill="var(--paper-raised)" stroke="var(--pencil)" stroke-width="1.6"/>
+        <text x="360" y="392" text-anchor="middle" class="svg-label">Validator</text>
+        <text x="360" y="410" text-anchor="middle" class="svg-sublabel">plain code — not the model</text>
+
+        <!-- gate -> rejected -->
+        <line x1="298" y1="418" x2="180" y2="470" stroke="var(--redline)" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="112" y="450" text-anchor="middle" class="svg-arrow-text" fill="var(--redline)">unknown id ·</text>
+        <text x="112" y="463" text-anchor="middle" class="svg-arrow-text" fill="var(--redline)">conflict · empty text</text>
+
+        <!-- gate -> accepted -->
+        <line x1="422" y1="418" x2="560" y2="470" stroke="var(--approved)" stroke-width="1.3" marker-end="url(#arrow)"/>
+        <text x="628" y="450" text-anchor="middle" class="svg-arrow-text" fill="var(--approved)">valid, unique</text>
+        <text x="628" y="463" text-anchor="middle" class="svg-arrow-text" fill="var(--approved)">target</text>
+
+        <!-- REJECTED -->
+        <rect x="30" y="470" width="220" height="56" rx="2" fill="var(--redline-soft)" stroke="var(--redline)" stroke-width="1.3"/>
+        <text x="140" y="494" text-anchor="middle" class="svg-label" fill="var(--redline)">Rejected edits</text>
+        <text x="140" y="512" text-anchor="middle" class="svg-sublabel">logged, run continues</text>
+
+        <!-- ACCEPTED -->
+        <rect x="490" y="470" width="200" height="56" rx="2" fill="var(--approved-soft)" stroke="var(--approved)" stroke-width="1.3"/>
+        <text x="590" y="494" text-anchor="middle" class="svg-label" fill="var(--approved)">Accepted edits</text>
+        <text x="590" y="512" text-anchor="middle" class="svg-sublabel">no conflicts remain</text>
+
+        <line x1="590" y1="526" x2="590" y2="576" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+        <!-- APPLY -->
+        <rect x="490" y="576" width="200" height="56" rx="2" fill="none" stroke="currentColor" stroke-width="1.3" opacity="0.85"/>
+        <text x="590" y="600" text-anchor="middle" class="svg-label">Apply edits</text>
+        <text x="590" y="618" text-anchor="middle" class="svg-sublabel">string ops — no LLM</text>
+
+        <!-- APPLY -> UPDATED DOC (long vertical) -->
+        <line x1="590" y1="632" x2="590" y2="796" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+        <!-- APPLY -> ORPHAN CHECK -->
+        <line x1="505" y1="628" x2="470" y2="700" stroke="var(--pencil)" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+        <!-- SPLIT -> ORPHAN CHECK (dashed, pre-edit snapshot, routed around) -->
+        <polyline points="510,178 705,178 705,722 490,722" fill="none" stroke="currentColor" stroke-width="1.1" stroke-dasharray="4 4" opacity="0.6" marker-end="url(#arrow)"/>
+        <text x="712" y="450" class="svg-arrow-text" transform="rotate(90 712 450)" text-anchor="middle">pre-edit paragraph snapshot</text>
+
+        <!-- ORPHAN CHECK -->
+        <rect x="230" y="690" width="260" height="64" rx="2" fill="var(--pencil-soft)" stroke="var(--pencil)" stroke-width="1.4"/>
+        <text x="360" y="716" text-anchor="middle" class="svg-label">Orphan-heading check</text>
+        <text x="360" y="734" text-anchor="middle" class="svg-sublabel">before vs. after — code, not the model</text>
+        <text x="360" y="748" text-anchor="middle" class="svg-sublabel">flags only what THIS run introduced</text>
+
+        <!-- ORPHAN CHECK -> REPORT -->
+        <line x1="300" y1="754" x2="220" y2="796" stroke="currentColor" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+        <!-- REJECTED -> REPORT -->
+        <line x1="140" y1="526" x2="150" y2="796" stroke="var(--redline)" stroke-width="1.3" marker-end="url(#arrow)"/>
+
+        <!-- REPORT -->
+        <rect x="40" y="796" width="260" height="66" rx="2" fill="var(--paper-raised)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+        <text x="170" y="822" text-anchor="middle" class="svg-label">Report</text>
+        <text x="170" y="840" text-anchor="middle" class="svg-sublabel">per-change status</text>
+        <text x="170" y="854" text-anchor="middle" class="svg-sublabel">+ orphan flags + token usage</text>
+
+        <!-- UPDATED DOCUMENT -->
+        <rect x="460" y="796" width="220" height="66" rx="2" fill="var(--paper-raised)" stroke="currentColor" stroke-width="1.3" opacity="0.9"/>
+        <text x="570" y="822" text-anchor="middle" class="svg-label">Updated document</text>
+        <text x="570" y="840" text-anchor="middle" class="svg-sublabel">only accepted edits</text>
+        <text x="570" y="854" text-anchor="middle" class="svg-sublabel">applied</text>
+      </svg>
+    </div>
+    <figcaption>
+      <b>What this shows:</b> the model is called <b>once</b> and only ever returns a
+      short edit list, never the whole document. The validator gate is ordinary code —
+      it, not the model, decides what reaches the document. The dashed line is the
+      mechanism that catches formatting mistakes the model's own summary would miss: the
+      orphan-heading check compares the applied result against paragraphs as they existed
+      <i>before</i> any edit, independent of what the model claims it did.
+    </figcaption>
+  </figure>
+
+  <hr class="rule">
+
+  <h2>2. Inside the validator gate</h2>
+  <p class="section-note">
+    The gate's job is narrow: never guess. Three real cases from testing, and what the
+    gate does with each.
+  </p>
+
+  <figure>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 760 420" role="img"
+           aria-label="Three cases through the validator: a well-formed edit targeting an existing paragraph is accepted; an edit targeting a paragraph id that does not exist is rejected; and two edits from different changes that both target the same paragraph are both rejected together, rather than one being silently kept.">
+        <defs>
+          <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor" />
+          </marker>
+        </defs>
+
+        <!-- column guides (labels) -->
+        <text x="150" y="24" text-anchor="middle" class="svg-arrow-text" opacity="0.55">proposed edit(s)</text>
+        <text x="390" y="24" text-anchor="middle" class="svg-arrow-text" opacity="0.55">validator</text>
+        <text x="610" y="24" text-anchor="middle" class="svg-arrow-text" opacity="0.55">outcome</text>
+
+        <!-- Row A: accepted -->
+        <rect x="30" y="46" width="240" height="50" rx="2" fill="var(--mono-chip)" stroke="currentColor" stroke-width="1" opacity="0.9"/>
+        <text x="150" y="67" text-anchor="middle" class="svg-sublabel">P5 · replace</text>
+        <text x="150" y="83" text-anchor="middle" class="svg-sublabel">"$100/mo" → "$110/mo"</text>
+
+        <line x1="270" y1="71" x2="340" y2="71" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrow2)"/>
+        <circle cx="390" cy="71" r="26" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <line x1="410" y1="71" x2="480" y2="71" stroke="var(--approved)" stroke-width="1.3" marker-end="url(#arrow2)"/>
+
+        <rect x="490" y="46" width="240" height="50" rx="2" fill="var(--approved-soft)" stroke="var(--approved)" stroke-width="1.3"/>
+        <text x="610" y="67" text-anchor="middle" class="svg-label" fill="var(--approved)">Accepted</text>
+        <text x="610" y="83" text-anchor="middle" class="svg-sublabel">valid id, no conflict</text>
+
+        <!-- Row B: rejected, unknown id -->
+        <rect x="30" y="126" width="240" height="50" rx="2" fill="var(--mono-chip)" stroke="currentColor" stroke-width="1" opacity="0.9"/>
+        <text x="150" y="147" text-anchor="middle" class="svg-sublabel">P99 · replace</text>
+        <text x="150" y="163" text-anchor="middle" class="svg-sublabel" fill="var(--redline)">P99 doesn't exist</text>
+
+        <line x1="270" y1="151" x2="340" y2="151" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrow2)"/>
+        <circle cx="390" cy="151" r="26" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <line x1="410" y1="151" x2="480" y2="151" stroke="var(--redline)" stroke-width="1.3" marker-end="url(#arrow2)"/>
+
+        <rect x="490" y="126" width="240" height="50" rx="2" fill="var(--redline-soft)" stroke="var(--redline)" stroke-width="1.3"/>
+        <text x="610" y="147" text-anchor="middle" class="svg-label" fill="var(--redline)">Rejected</text>
+        <text x="610" y="163" text-anchor="middle" class="svg-sublabel">unknown paragraph_id</text>
+
+        <!-- Row C: conflict, both rejected -->
+        <rect x="30" y="228" width="240" height="46" rx="2" fill="var(--mono-chip)" stroke="currentColor" stroke-width="1" opacity="0.9"/>
+        <text x="150" y="247" text-anchor="middle" class="svg-sublabel">P7 · replace</text>
+        <text x="150" y="262" text-anchor="middle" class="svg-sublabel">from change #1</text>
+
+        <rect x="30" y="286" width="240" height="46" rx="2" fill="var(--mono-chip)" stroke="currentColor" stroke-width="1" opacity="0.9"/>
+        <text x="150" y="305" text-anchor="middle" class="svg-sublabel">P7 · delete</text>
+        <text x="150" y="320" text-anchor="middle" class="svg-sublabel">from change #3</text>
+
+        <line x1="270" y1="251" x2="340" y2="290" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrow2)"/>
+        <line x1="270" y1="309" x2="340" y2="290" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrow2)"/>
+        <circle cx="390" cy="290" r="26" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <line x1="410" y1="290" x2="480" y2="290" stroke="var(--redline)" stroke-width="1.3" marker-end="url(#arrow2)"/>
+
+        <rect x="490" y="260" width="240" height="60" rx="2" fill="var(--redline-soft)" stroke="var(--redline)" stroke-width="1.3"/>
+        <text x="610" y="284" text-anchor="middle" class="svg-label" fill="var(--redline)">Both rejected</text>
+        <text x="610" y="301" text-anchor="middle" class="svg-sublabel">same paragraph, two changes —</text>
+        <text x="610" y="314" text-anchor="middle" class="svg-sublabel">neither guessed at</text>
+
+        <text x="30" y="380" class="svg-arrow-text" opacity="0.6">An earlier version of this gate kept whichever edit it scanned first —</text>
+        <text x="30" y="396" class="svg-arrow-text" opacity="0.6">a unit test caught that before it ever reached a real document.</text>
+      </svg>
+    </div>
+    <figcaption>
+      <b>Why row C matters most:</b> when two edits genuinely conflict, picking one
+      arbitrarily <i>is</i> a silent bad apply — the code has no way to know which
+      instruction was "right." Dropping both and reporting it is the only version of
+      this gate that doesn't quietly guess on the document's behalf.
+    </figcaption>
+  </figure>
+
+  <hr class="rule">
+
+  <div class="colophon">
+    <div class="colophon-item">
+      <div class="k">Test document</div>
+      <div class="v">8,509 <small>words</small></div>
+    </div>
+    <div class="colophon-item">
+      <div class="k">Prompt tokens</div>
+      <div class="v">11,615</div>
+    </div>
+    <div class="colophon-item">
+      <div class="k">Completion tokens</div>
+      <div class="v">811 <small>(~7% of prompt)</small></div>
+    </div>
+    <div class="colophon-item">
+      <div class="k">Latency</div>
+      <div class="v">~24 <small>seconds</small></div>
+    </div>
+    <div class="colophon-item">
+      <div class="k">Paragraphs touched</div>
+      <div class="v">9 <small>of 223</small></div>
+    </div>
+    <div class="colophon-item">
+      <div class="k">Unit tests</div>
+      <div class="v">14 <small>passing</small></div>
+    </div>
+  </div>
+
+  <div class="caveat">
+    <b>What this diagram simplifies:</b> it doesn't show the output-truncation
+    fallback (splitting a change batch in half and retrying if a broad edit approaches
+    the model's completion-token ceiling), or the top-level crash handler that lets a
+    fatal error still produce a valid report. Both exist in the code and are covered by
+    unit tests, but they didn't fit this figure without diluting the two mechanisms that
+    actually matter most: the single-call edit proposal, and the gate that never guesses.
+  </div>
+
+</div>

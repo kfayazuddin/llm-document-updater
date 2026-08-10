@@ -17,6 +17,12 @@ Model defaults to `gpt-4o`, overridable with `--model` / `MODEL` env var.
 Deterministic unit tests for the validation/reliability layer (no API key
 needed): `python test_reliability.py`.
 
+**Architecture diagram:** [`docs/architecture-diagram.html`](docs/architecture-diagram.html)
+walks through the pipeline and the validator gate visually. GitHub shows raw
+HTML as source rather than rendering it, so view it either by downloading
+the file and opening it in a browser, or via
+[htmlpreview.github.io](https://htmlpreview.github.io/?https://raw.githubusercontent.com/kfayazuddin/llm-document-updater/main/docs/architecture-diagram.html).
+
 ## Architecture, and why
 
 **The core decision: don't ask the LLM to rewrite the whole document. Ask it to
