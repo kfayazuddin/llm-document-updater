@@ -1,0 +1,36 @@
+{
+  "changes": [
+    {
+      "change": "Remove the paragraph about our mobile app",
+      "applied_edits": 0,
+      "rejected_edits": 0,
+      "state": "unresolved_by_model",
+      "reason": "There is no paragraph about a mobile app in the provided document."
+    }
+  ],
+  "rejected_edits_detail": [],
+  "orphan_headings": [],
+  "token_usage": {
+    "prompt_tokens": 685,
+    "completion_tokens": 32,
+    "total_tokens": 717,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "doc_stats": {
+    "paragraphs_before": 5,
+    "paragraphs_after": 5,
+    "words_before": 24,
+    "words_after": 24,
+    "word_delta_pct": 0.0
+  },
+  "needs_human_review": true
+}

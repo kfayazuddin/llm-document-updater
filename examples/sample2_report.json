@@ -1,0 +1,35 @@
+{
+  "changes": [
+    {
+      "change": "Update the pricing section to reflect a 10% increase across all tiers",
+      "applied_edits": 3,
+      "rejected_edits": 0,
+      "state": "applied"
+    }
+  ],
+  "rejected_edits_detail": [],
+  "orphan_headings": [],
+  "token_usage": {
+    "prompt_tokens": 780,
+    "completion_tokens": 203,
+    "total_tokens": 983,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "doc_stats": {
+    "paragraphs_before": 8,
+    "paragraphs_after": 8,
+    "words_before": 80,
+    "words_after": 80,
+    "word_delta_pct": 0.0
+  },
+  "needs_human_review": false
+}

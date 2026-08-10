@@ -1,0 +1,58 @@
+{
+  "changes": [
+    {
+      "change": "Update the pricing section to reflect a 10% increase across all tiers",
+      "applied_edits": 1,
+      "rejected_edits": 0,
+      "state": "applied"
+    },
+    {
+      "change": "Remove the paragraph about the legacy API",
+      "applied_edits": 1,
+      "rejected_edits": 0,
+      "state": "applied"
+    },
+    {
+      "change": "Make the tone throughout more formal",
+      "applied_edits": 6,
+      "rejected_edits": 0,
+      "state": "applied"
+    },
+    {
+      "change": "Add a one-sentence note at the end of the Security section mentioning our SOC 2 Type II certification was last renewed in March 2027",
+      "applied_edits": 1,
+      "rejected_edits": 0,
+      "state": "applied"
+    }
+  ],
+  "rejected_edits_detail": [],
+  "orphan_headings": [
+    {
+      "paragraph_id": "P7",
+      "text": "## Legacy API (v1)"
+    }
+  ],
+  "token_usage": {
+    "prompt_tokens": 11615,
+    "completion_tokens": 811,
+    "total_tokens": 12426,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "doc_stats": {
+    "paragraphs_before": 223,
+    "paragraphs_after": 222,
+    "words_before": 8509,
+    "words_after": 8436,
+    "word_delta_pct": -0.9
+  },
+  "needs_human_review": true
+}

@@ -1,0 +1,6 @@
+{
+  "sourceDocument": "# Acme Cloud Platform — Product Overview\n\n## Pricing\n\n- Starter: $100/month\n- Growth: $500/month\n- Enterprise: $2,000/month\n\nAll tiers include unlimited seats and 99.9% uptime SLA.\n\n## Getting Started\n\nMost customers start on the Starter plan at $100/month and upgrade as their team grows. It's the easiest way to try the platform before committing to Growth or Enterprise.\n\n## FAQ\n\nQ: How much does the Starter plan cost?\nA: The Starter plan is $100/month, with no long-term contract required.\n",
+  "changes": [
+    "Update the pricing section to reflect a 10% increase across all tiers"
+  ]
+}

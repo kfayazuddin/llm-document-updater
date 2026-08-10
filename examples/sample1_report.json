@@ -1,0 +1,58 @@
+{
+  "changes": [
+    {
+      "change": "Update the pricing section to reflect a 10% increase across all tiers",
+      "applied_edits": 1,
+      "rejected_edits": 0,
+      "state": "applied"
+    },
+    {
+      "change": "Remove the paragraph about the legacy API",
+      "applied_edits": 1,
+      "rejected_edits": 0,
+      "state": "applied"
+    },
+    {
+      "change": "Make the tone throughout more formal",
+      "applied_edits": 6,
+      "rejected_edits": 0,
+      "state": "applied"
+    },
+    {
+      "change": "Add a one-sentence note at the end of the Security section mentioning we are GDPR compliant",
+      "applied_edits": 1,
+      "rejected_edits": 0,
+      "state": "applied"
+    }
+  ],
+  "rejected_edits_detail": [],
+  "orphan_headings": [
+    {
+      "paragraph_id": "P7",
+      "text": "## Legacy API (v1)"
+    }
+  ],
+  "token_usage": {
+    "prompt_tokens": 1144,
+    "completion_tokens": 608,
+    "total_tokens": 1752,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "doc_stats": {
+    "paragraphs_before": 14,
+    "paragraphs_after": 14,
+    "words_before": 317,
+    "words_after": 252,
+    "word_delta_pct": -20.5
+  },
+  "needs_human_review": true
+}

@@ -1,0 +1,6 @@
+{
+  "sourceDocument": "# Acme Cloud Platform — Product Overview\n\n## Pricing\n\n- Starter: $100/month\n- Growth: $500/month\n\n## Support\n\nEmail support is available on all plans.\n",
+  "changes": [
+    "Remove the paragraph about our mobile app"
+  ]
+}
