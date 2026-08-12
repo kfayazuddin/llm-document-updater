@@ -464,7 +464,25 @@ def run(source_document, changes, api_key, model=DEFAULT_MODEL):
     return updated_doc, report
 
 
+def load_dotenv(path=".env"):
+    """Minimal .env loader -- no python-dotenv dependency needed for a
+    handful of KEY=value lines. Never overrides a variable already set in
+    the real environment, so `$env:OPENAI_API_KEY = "..."` still wins if
+    both are present."""
+    if not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
 def main():
+    load_dotenv()
+
     ap = argparse.ArgumentParser(description="LLM-driven document updater")
     ap.add_argument("--input", required=True, help="Path to JSON file: {sourceDocument, changes}")
     ap.add_argument("--out-doc", required=True, help="Path to write updated document")

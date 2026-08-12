@@ -8,9 +8,13 @@ documents.
 python doc_updater.py --input input.json --out-doc updated.md --out-report report.json
 ```
 
-Requires `OPENAI_API_KEY` in the environment (or `--api-key`). Pure Python 3
+Requires `OPENAI_API_KEY`, set either as a real environment variable, via
+`--api-key`, or in a local `.env` file (copy `.env.example` to `.env` and
+fill in your key — `.env` is git-ignored and never committed). Pure Python 3
 standard library — no dependencies to install (built under real time pressure;
-`pip install` wasn't worth the risk of a flaky network delay mid-assessment).
+`pip install` wasn't worth the risk of a flaky network delay mid-assessment,
+and it kept a `.env` loader to a few lines of stdlib code rather than a
+`python-dotenv` dependency).
 
 Model defaults to `gpt-4o`, overridable with `--model` / `MODEL` env var.
 
