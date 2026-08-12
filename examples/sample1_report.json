@@ -34,10 +34,10 @@
   ],
   "token_usage": {
     "prompt_tokens": 1144,
-    "completion_tokens": 608,
-    "total_tokens": 1752,
+    "completion_tokens": 609,
+    "total_tokens": 1753,
     "prompt_tokens_details": {
-      "cached_tokens": 1024,
+      "cached_tokens": 0,
       "audio_tokens": 0
     },
     "completion_tokens_details": {
@@ -51,8 +51,8 @@
     "paragraphs_before": 14,
     "paragraphs_after": 14,
     "words_before": 317,
-    "words_after": 252,
-    "word_delta_pct": -20.5
+    "words_after": 253,
+    "word_delta_pct": -20.2
   },
   "needs_human_review": true
 }

@@ -1,6 +1,6 @@
 # Acme Cloud Platform — Product Overview
 
-Acme Cloud Platform assists teams in accelerating their deployment processes by providing a unified platform for managing infrastructure, billing, and access control. This document outlines pricing, the API surface, and support tiers.
+Acme Cloud Platform assists teams in accelerating their deployment processes by providing a unified platform for managing infrastructure, billing, and access control. This document covers pricing, the API surface, and support tiers.
 
 ## Pricing
 
@@ -16,7 +16,7 @@ All tiers include unlimited seats and a 99.9% uptime SLA. Overage charges apply 
 
 ## Getting Started
 
-The sign-up process is efficient. Simply create an account, select a plan, and invite your team. Most customers are operational in under ten minutes. Our onboarding team is available for a guided walkthrough if desired. We believe you will appreciate the ease with which you can organize your infrastructure.
+The sign-up process is swift. Simply create an account, select a plan, and invite your team. Most customers are operational in under ten minutes. Our onboarding team is also available for a guided walkthrough if desired. We believe you will appreciate the ease with which you can organize your infrastructure.
 
 ## Support
 
